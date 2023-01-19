@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 2cf4b602f9b0e124f8ed110bf047d5e2
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - ball: {fileID: 6040046041887672017, guid: 9b15a55efaaa74649afac907c13c22ea, type: 3}
+  - PlayerPaddle: {fileID: 73626475357309137, guid: 98b204c1683f2ad4eadce1772ad2f761, type: 3}
+  - ComputerPaddle: {fileID: 6464483363846657916, guid: b0d7941f26f4062498bb3870cb522e89, type: 3}
+  - playerScoreText: {instanceID: 0}
+  - computerScoreText: {instanceID: 0}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
