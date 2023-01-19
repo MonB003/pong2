@@ -1,10 +1,9 @@
 // using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Globalization;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using pong2;
 
 public class Paddle : MonoBehaviour
 {
@@ -15,9 +14,9 @@ public class Paddle : MonoBehaviour
     public float y;
     public float x;
     public float z;
-    public byte action;
     protected Rigidbody2D body;
-    private Packet p;
+    public Packet p;
+    //public NetworkClient network;
 
 
     private void Awake()
@@ -36,8 +35,7 @@ public class Paddle : MonoBehaviour
 
     public Packet Packetize()
     {
-        Packet packet = new Packet((byte)id, (byte)action, (byte)x, (byte)y, (byte)z);
-        //p = packet;
+        Packet packet = new Packet((byte)id, (byte)0, (byte)x, (byte)y, (byte)z);
         return packet;
     }
 
@@ -57,9 +55,13 @@ public class Paddle : MonoBehaviour
     void Start()
     {
         // send, set the vars
+        y = this.transform.position.y;
+        x = this.transform.position.x;
+        z = this.transform.position.z;
+        p = Packetize();
     }
 
-    public Packet GetPacket()
+    public virtual Packet GetPacket()
     {
         return p;
     }
@@ -71,12 +73,8 @@ public class Paddle : MonoBehaviour
 
         // update locations
         y = this.transform.position.y;
-        UnityEngine.Debug.Log("y " + y);
         x = this.transform.position.x;
-        UnityEngine.Debug.Log("x " + x);
-
         z = this.transform.position.z;
-        UnityEngine.Debug.Log("z " + z);
 
         //p = Packetize();
 
@@ -85,6 +83,8 @@ public class Paddle : MonoBehaviour
 
     }
 
+
+    
 
     public void UpdatePos()
     {
@@ -101,8 +101,7 @@ public class Paddle : MonoBehaviour
 
         p = Packetize();
 
-
-        // network.Send(Packetize());
+        // p = Packetize();
 
     }
 
@@ -110,5 +109,9 @@ public class Paddle : MonoBehaviour
     {
         body.position = new Vector2(body.position.x, 0.0f);
         body.velocity = Vector2.zero;
+    }
+
+    public override string ToString(){
+        return "Paddle: " + id + " " + x + " " + y + " " + z;
     }
 }

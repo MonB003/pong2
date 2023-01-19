@@ -1,25 +1,30 @@
+
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using MultiNet = pong2.Network.MulticastNetwork;
+using WebSock = pong2.Network.WebSocketNetwork;
+using Net = pong2.Network.Network;
+using pong2;
 
 public class GameManager : MonoBehaviour
 {
-    private int playerScore = 0;
+    private int playerScore   = 0;
     private int computerScore = 0;
-    public int ballSpeed = 200;
+    public int ballSpeed      = 200;
     public Ball ball;
     public Paddle PlayerPaddle;
     public Paddle PlayerPaddle2;
     public Text playerScoreText;
     public Text computerScoreText;
-
     public int playerCount      = 0;
     public List<Paddle> paddles = new List<Paddle>();
     public float[,] positions   = new float[2,3]{{-8.830017f,0.04998779f,0.0f}, {9.02f,-0.08f, 0.0f}};
 
 
-    public NetworkClient network;
+    // public NetworkClient network;
+    public Net network;
 
 
 
@@ -47,14 +52,25 @@ public class GameManager : MonoBehaviour
         ResetRound();
     }
     
-
+    void Awake()
+    {
+        if(paddles.Count == 0)
+        {
+            // create game
+            
+        } else {
+            // join
+        }
+    }
+    
     void Start()
     {
 
-        //network = connect(); // connect to multi cast network
-        // renderArea();
-        network = new NetworkClient();
-        
+       
+        //what kind of network
+       // network = new WebSocketNetwork();
+       network = new MultiNet(this);
+
         PlayerPaddle   = Instantiate (PlayerPaddle) as Paddle;
         ball           = Instantiate (ball) as Ball;
         PlayerPaddle2  = Instantiate(PlayerPaddle2) as Paddle;
@@ -101,6 +117,9 @@ public class GameManager : MonoBehaviour
 
         //    }
 
+        Debug.Log("***BALL SENT: " + ball.Packetize().ToString());
+        network.send(ball.Packetize());
+
         for (int i = 0; i < paddles.Count; i++)
         {
             Paddle p = paddles[i];
@@ -111,6 +130,7 @@ public class GameManager : MonoBehaviour
             // send to network here// network.send(pack)
 
         }
+
     }
 
     private void ResetRound(){

@@ -10,7 +10,7 @@ using System.Collections;
 using UnityEngine;
 
 
-
+namespace pong2{
 public class Packet  
 {
 
@@ -33,25 +33,11 @@ public class Packet
 
         public Packet(byte user, byte action, byte x, byte y, byte z)
         {
-          for(int i = 0; i < data.Length; i++){
-            switch(i){
-                case 0:
-                    data[i] = user;
-                    break;
-                case 1:
-                    data[i] = action;
-                    break;
-                case 2:
-                    data[i] = x;
-                    break;
-                case 3:
-                    data[i] = y;
-                    break;
-                case 4:
-                    data[i] = z;
-                    break;
-            }
-          }
+                    data[0] = user;
+                    data[1] = action;
+                    data[2] = x;
+                    data[3] = y;
+                    data[4] = z;
         }
 
     
@@ -100,4 +86,6 @@ public class Packet
         {
             return this.data;
         }
+}
+
 }
