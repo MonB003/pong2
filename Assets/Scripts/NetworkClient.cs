@@ -27,7 +27,12 @@ public class NetworkClient
 
     public NetworkClient()
     {
+        port = PORT;
+        ipAddress = IP_ADDRESS;
+
         setup();
+  
+        send(new Packet());
         receive();
     }
 
@@ -73,16 +78,27 @@ public void setup()
         }
 
 
-     public void receive()
+
+    public void send(Packet packet)
+    {
+        Debug.Log("SENDING: " + packet.ToString());
+
+            //Send multicast packets to the listener.
+            this.mcastSocket.SendTo(packet.GetBuffer(), endPoint);
+    }
+
+
+    public void receive()
     {
         Debug.Log("RECEIVING");
         EndPoint remoteEP = (EndPoint)new IPEndPoint(IPAddress.Any, 0); // Recieve ENDPOINT
 
         // while (true)
         // {
-            // mcastSocket.ReceiveFrom(buffer, ref remoteEP);
+        mcastSocket.ReceiveFrom(buffer, ref remoteEP);
 
-            // Packet packet = new Packet(buffer[0], buffer[1], buffer[2], buffer[3], buffer[4]);
+        Packet packet = new Packet(buffer[0], buffer[1], buffer[2], buffer[3], buffer[4]);
+        Debug.Log("RECEIVED PACKET: " + packet.ToString());
 
         //     //Console.WriteLine("RECEIVED PACKET: " + packet.ToString());
 
