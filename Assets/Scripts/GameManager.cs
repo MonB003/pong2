@@ -58,6 +58,9 @@ public class GameManager : MonoBehaviour
         PlayerPaddle   = Instantiate (PlayerPaddle) as Paddle;
         ball           = Instantiate (ball) as Ball;
         PlayerPaddle2  = Instantiate(PlayerPaddle2) as Paddle;
+
+        paddles.Add(PlayerPaddle);
+        paddles.Add(PlayerPaddle2);
         
         SetPlayerPosition(PlayerPaddle, positions[0,0], positions[0,1], positions[0,2]);
         SetPlayerPosition(PlayerPaddle2, positions[1,0], positions[1,1], positions[1,2]);
@@ -85,8 +88,8 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame, 60 frames/second
     void Update()
     {
-        network.send(PlayerPaddle.Packetize());
-        network.send(PlayerPaddle2.Packetize());
+        //network.send(PlayerPaddle.Packetize());
+        //network.send(PlayerPaddle2.Packetize());
 
         // renderArea();
 
@@ -97,6 +100,17 @@ public class GameManager : MonoBehaviour
         //         // send to network here// network.send(pack)
 
         //    }
+
+        for (int i = 0; i < paddles.Count; i++)
+        {
+            Paddle p = paddles[i];
+            p.UpdatePos();
+            Packet pack = p.GetPacket();
+            Debug.Log("***PADDLE SENT: " + pack.ToString());
+            network.send(p.Packetize());
+            // send to network here// network.send(pack)
+
+        }
     }
 
     private void ResetRound(){

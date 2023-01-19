@@ -37,7 +37,7 @@ public class Paddle : MonoBehaviour
     public Packet Packetize()
     {
         Packet packet = new Packet((byte)id, (byte)action, (byte)x, (byte)y, (byte)z);
-        p = packet;
+        //p = packet;
         return packet;
     }
 
@@ -67,6 +67,8 @@ public class Paddle : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        Debug.Log("UPDATE PADDLE");
+
         // update locations
         y = this.transform.position.y;
         UnityEngine.Debug.Log("y " + y);
@@ -77,6 +79,27 @@ public class Paddle : MonoBehaviour
         UnityEngine.Debug.Log("z " + z);
 
         //p = Packetize();
+
+
+        // network.Send(Packetize());
+
+    }
+
+
+    public void UpdatePos()
+    {
+        Debug.Log("UPDATE POS PADDLE");
+
+        // update locations
+        y = this.transform.position.y;
+        //UnityEngine.Debug.Log("y " + y);
+        x = this.transform.position.x;
+        //UnityEngine.Debug.Log("x " + x);
+
+        z = this.transform.position.z;
+        //UnityEngine.Debug.Log("z " + z);
+
+        p = Packetize();
 
 
         // network.Send(Packetize());

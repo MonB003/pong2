@@ -32,8 +32,8 @@ public class NetworkClient
 
         setup();
   
-        send(new Packet());
-        receive();
+        //send(new Packet());
+        //receive();
     }
 
 
