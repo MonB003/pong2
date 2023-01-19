@@ -54,6 +54,7 @@ public class NetworkClient
 
 public void setup()
         {
+        Debug.Log("SETUP");
           
             this.mcastAddress = IPAddress.Parse(IP_ADDRESS);
 

@@ -9,6 +9,7 @@ using UnityEngine;
 public class Paddle : MonoBehaviour
 {
     //  private NetworkAPI network;
+    //public NetworkClient network = new NetworkClient();
     public float speed = 5f;
     public int id;
     public float y;
@@ -33,9 +34,10 @@ public class Paddle : MonoBehaviour
         this.z = z;
     }
 
-    private Packet Packetize()
+    public Packet Packetize()
     {
         Packet packet = new Packet((byte)id, (byte)action, (byte)x, (byte)y, (byte)z);
+        p = packet;
         return packet;
     }
 
@@ -73,6 +75,8 @@ public class Paddle : MonoBehaviour
 
         z = this.transform.position.z;
         UnityEngine.Debug.Log("z " + z);
+
+        //p = Packetize();
 
 
         // network.Send(Packetize());

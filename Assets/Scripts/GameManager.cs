@@ -19,9 +19,12 @@ public class GameManager : MonoBehaviour
     public float[,] positions   = new float[2,3]{{-8.830017f,0.04998779f,0.0f}, {9.02f,-0.08f, 0.0f}};
 
 
-   
+    public NetworkClient network;
+
+
+
    // public List<Paddle> = new List<Paddle>()
-    // Start is called before the first frame update
+   // Start is called before the first frame update
 
 
     public void SetPlayerPosition(Paddle paddle, float x, float y, float z){
@@ -50,7 +53,7 @@ public class GameManager : MonoBehaviour
 
         //network = connect(); // connect to multi cast network
         // renderArea();
-        NetworkClient network = new NetworkClient();
+        network = new NetworkClient();
         
         PlayerPaddle   = Instantiate (PlayerPaddle) as Paddle;
         ball           = Instantiate (ball) as Ball;
@@ -58,7 +61,10 @@ public class GameManager : MonoBehaviour
         
         SetPlayerPosition(PlayerPaddle, positions[0,0], positions[0,1], positions[0,2]);
         SetPlayerPosition(PlayerPaddle2, positions[1,0], positions[1,1], positions[1,2]);
-        
+
+        network.send(PlayerPaddle.Packetize());
+        network.send(PlayerPaddle2.Packetize());
+
         // initial send to network
         // infinite loop to recieve from network
 
@@ -79,15 +85,18 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame, 60 frames/second
     void Update()
     {
-      // renderArea();
+        network.send(PlayerPaddle.Packetize());
+        network.send(PlayerPaddle2.Packetize());
 
-    //    for(int i = 0; i < paddles.Count; i++)
-    //    {
-    //         Paddle p = paddles[i];
-    //         Packet pack = p.GetPacket();
-    //         // send to network here// network.send(pack)
+        // renderArea();
 
-    //    }
+        //    for(int i = 0; i < paddles.Count; i++)
+        //    {
+        //         Paddle p = paddles[i];
+        //         Packet pack = p.GetPacket();
+        //         // send to network here// network.send(pack)
+
+        //    }
     }
 
     private void ResetRound(){
