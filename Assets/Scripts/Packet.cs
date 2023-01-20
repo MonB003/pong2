@@ -10,9 +10,10 @@ using System.Collections;
 using UnityEngine;
 
 
-namespace pong2{
-public class Packet  
+namespace pong2
 {
+    public class Packet
+    {
 
         private const int DEFAULT_SIZE = 5;
         private const float MAX_float = 255;
@@ -23,24 +24,19 @@ public class Packet
 
         public Packet()
         {
-            // Set default values for each float in the data
-            // R random = new R();
-            // for (int i = 0; i < DEFAULT_SIZE; i++)
-            // {
-            //     data[i] = (float)random.Next(0, 255);
-            // }
+
         }
 
         public Packet(float user, float action, float x, float y, float z)
         {
-                    data[0] = user;
-                    data[1] = action;
-                    data[2] = x;
-                    data[3] = y;
-                    data[4] = z;
+            data[0] = user;
+            data[1] = action;
+            data[2] = x;
+            data[3] = y;
+            data[4] = z;
         }
 
-    
+
 
         public float GetUser()
         {
@@ -49,7 +45,7 @@ public class Packet
 
         public void SetUser(float userID)
         {
-           
+
         }
 
         public float GetFruit()
@@ -58,7 +54,7 @@ public class Packet
         }
         public void SetLocation(float location)
         {
-           data[1] = location;
+            data[1] = location;
         }
 
         public float GetAction()
@@ -66,7 +62,7 @@ public class Packet
             return data[2];
         }
         public void SetAction(float action)
-        {   
+        {
         }
 
 
@@ -86,18 +82,18 @@ public class Packet
         {
 
             List<byte> bytes = new List<byte>();
-
-            foreach(float f in data)
+            foreach (float f in data)
             {
+                byte[] floatBytes = BitConverter.GetBytes(f);
+                foreach (byte b in floatBytes)
+                {
+                    Debug.Log(b);
+                }
+                
                 bytes.AddRange(BitConverter.GetBytes(f));
             }
-
-            
-            
-
-
             return bytes.ToArray();
         }
-}
+    }
 
 }

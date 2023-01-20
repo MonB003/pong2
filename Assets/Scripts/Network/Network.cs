@@ -16,7 +16,7 @@ namespace pong2.Network
     {
         private const int PORT = 11000;
         private const string IP_ADDRESS = "230.0.0.2";
-        private const int BUFFER_SIZE = 6;
+        private const int BUFFER_SIZE = 20;
 
         private int port;
         private string ipAddress;

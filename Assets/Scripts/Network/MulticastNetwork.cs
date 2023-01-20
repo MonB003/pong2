@@ -1,10 +1,12 @@
-﻿using System;
+﻿//using System.Diagnostics;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Sockets;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+using UnityEngine;
 
 //using pong2.Threads;
 //using GameThread = pong2.Threads.GameThread;
@@ -34,6 +36,7 @@ namespace pong2.Network
 
         public override void send(P packet)
         {
+            Debug.Log("SENDING: " + packet.GetBuffer().Length);
             Console.WriteLine("SENDING: " + packet.ToString());
 
             try
@@ -60,7 +63,7 @@ namespace pong2.Network
 
                 Console.WriteLine("RECEIVED PACKET: " + packet.ToString());
 
-               // manager.notify(packet);
+                manager.notify(packet);
             }
 
         }

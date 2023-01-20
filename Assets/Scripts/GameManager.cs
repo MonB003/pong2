@@ -1,4 +1,5 @@
 
+
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -10,17 +11,17 @@ using pong2;
 
 public class GameManager : MonoBehaviour
 {
-    private int playerScore   = 0;
+    private int playerScore = 0;
     private int computerScore = 0;
-    public int ballSpeed      = 200;
+    public int ballSpeed = 200;
     public Ball ball;
     public Paddle PlayerPaddle;
     public Paddle PlayerPaddle2;
     public Text playerScoreText;
     public Text computerScoreText;
-    public int playerCount      = 0;
+    public int playerCount = 0;
     public List<Paddle> paddles = new List<Paddle>();
-    public float[,] positions   = new float[2,3]{{-8.830017f,0.04998779f,0.0f}, {9.02f,-0.08f, 0.0f}};
+    public float[,] positions = new float[2, 3] { { -8.830017f, 0.04998779f, 0.0f }, { 9.02f, -0.08f, 0.0f } };
 
 
     // public NetworkClient network;
@@ -28,11 +29,12 @@ public class GameManager : MonoBehaviour
 
 
 
-   // public List<Paddle> = new List<Paddle>()
-   // Start is called before the first frame update
+    // public List<Paddle> = new List<Paddle>()
+    // Start is called before the first frame update
 
 
-    public void SetPlayerPosition(Paddle paddle, float x, float y, float z){
+    public void SetPlayerPosition(Paddle paddle, float x, float y, float z)
+    {
         paddle.SetPosition(x, y, z);
 
     }
@@ -51,60 +53,66 @@ public class GameManager : MonoBehaviour
         computerScoreText.text = computerScore.ToString();
         ResetRound();
     }
-    
+
     void Awake()
     {
-        if(paddles.Count == 0)
+        if (paddles.Count == 0)
         {
-            // create game
-            
-        } else {
-            // join
+            // create game and instantiate the player
+
+        }
+        else
+        {
+            // join instantiated another player
         }
     }
-    
+
     void Start()
     {
 
-       
-        //what kind of network
-       // network = new WebSocketNetwork();
-       network = new MultiNet(this);
 
-        PlayerPaddle   = Instantiate (PlayerPaddle) as Paddle;
-        ball           = Instantiate (ball) as Ball;
-        PlayerPaddle2  = Instantiate(PlayerPaddle2) as Paddle;
+        //what kind of network
+        // network = new WebSocketNetwork();
+        network = new MultiNet(this);
+        network.execute();
+
+        PlayerPaddle = Instantiate(PlayerPaddle) as Paddle;
+        ball = Instantiate(ball) as Ball;
+        PlayerPaddle2 = Instantiate(PlayerPaddle2) as Paddle;
 
         paddles.Add(PlayerPaddle);
         paddles.Add(PlayerPaddle2);
-        
-        SetPlayerPosition(PlayerPaddle, positions[0,0], positions[0,1], positions[0,2]);
-        SetPlayerPosition(PlayerPaddle2, positions[1,0], positions[1,1], positions[1,2]);
+
+        SetPlayerPosition(PlayerPaddle, positions[0, 0], positions[0, 1], positions[0, 2]);
+        SetPlayerPosition(PlayerPaddle2, positions[1, 0], positions[1, 1], positions[1, 2]);
 
         network.send(PlayerPaddle.Packetize());
         network.send(PlayerPaddle2.Packetize());
-
-        // initial send to network
-        // infinite loop to recieve from network
-
-        bool gamePlay = true;
-        // while (gamePlay)
-        // {
-        // //    RenderArea(network.recieve());
-            
-        // }
-      
+    
     }
 
-    private void RenderArea(Packet p){
+    private void RenderArea(Packet p)
+    {
 
         // checking on the bytes
+    }
+
+
+
+    /*
+     * Instantiates a player paddle.
+     */
+    public PlayerPaddle InstantiatePlayer()
+    {
+        PlayerPaddle p;
+        p = Instantiate(PlayerPaddle) as PlayerPaddle;
+        return p;
     }
 
     // Update is called once per frame, 60 frames/second
     void Update()
     {
-    
+
         Debug.Log("***BALL SENT: " + ball.Packetize().ToString());
         network.send(ball.Packetize());
 
@@ -118,17 +126,17 @@ public class GameManager : MonoBehaviour
             // send to network here// network.send(pack)
         }
 
-        // recieve
-
     }
 
 
-    // public void notify(Packet p)
-    // {
-    //      Debug.Log("notify being called");
-    // }
+    public void notify(Packet p)
+    {
+        Debug.Log("notified" + p.ToString());
+        Debug.Log("notify being called");
+    }
 
-    private void ResetRound(){
+    private void ResetRound()
+    {
         this.PlayerPaddle.ResetPosition();
         this.PlayerPaddle2.ResetPosition();
         ball.Reset();
