@@ -1,4 +1,4 @@
-// using System.Diagnostics;
+
 using System.Runtime.CompilerServices;
 using System.Globalization;
 using System.Collections.Generic;
@@ -35,7 +35,12 @@ public class Paddle : MonoBehaviour
 
     public Packet Packetize()
     {
-        Packet packet = new Packet((byte)id, (byte)0, (byte)x, (byte)y, (byte)z);
+     //   Debug.Log("packet 1: " + id);
+     //    Debug.Log("packet 2: " + 0);
+      //    Debug.Log("packet 3: " + x);
+      //     Debug.Log("packet 4: " + y);
+           // Debug.Log("packet 5: " + z);
+        Packet packet = new Packet(id, 0, x, y, z);
         return packet;
     }
 

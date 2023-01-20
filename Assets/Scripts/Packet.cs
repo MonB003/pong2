@@ -15,23 +15,23 @@ public class Packet
 {
 
         private const int DEFAULT_SIZE = 5;
-        private const byte MAX_BYTE = 255;
-        private const byte MIN_BYTE = 255;
+        private const float MAX_float = 255;
+        private const float MIN_float = 255;
 
-        private byte[] data = new byte[DEFAULT_SIZE];
+        private float[] data = new float[DEFAULT_SIZE];
 
 
         public Packet()
         {
-            // Set default values for each byte in the data
+            // Set default values for each float in the data
             // R random = new R();
             // for (int i = 0; i < DEFAULT_SIZE; i++)
             // {
-            //     data[i] = (byte)random.Next(0, 255);
+            //     data[i] = (float)random.Next(0, 255);
             // }
         }
 
-        public Packet(byte user, byte action, byte x, byte y, byte z)
+        public Packet(float user, float action, float x, float y, float z)
         {
                     data[0] = user;
                     data[1] = action;
@@ -42,30 +42,30 @@ public class Packet
 
     
 
-        public byte GetUser()
+        public float GetUser()
         {
             return data[0];
         }
 
-        public void SetUser(byte userID)
+        public void SetUser(float userID)
         {
            
         }
 
-        public byte GetFruit()
+        public float GetFruit()
         {
             return data[1];
         }
-        public void SetLocation(byte location)
+        public void SetLocation(float location)
         {
            data[1] = location;
         }
 
-        public byte GetAction()
+        public float GetAction()
         {
             return data[2];
         }
-        public void SetAction(byte action)
+        public void SetAction(float action)
         {   
         }
 
@@ -84,7 +84,19 @@ public class Packet
 
         public byte[] GetBuffer()
         {
-            return this.data;
+
+            List<byte> bytes = new List<byte>();
+
+            foreach(float f in data)
+            {
+                bytes.AddRange(BitConverter.GetBytes(f));
+            }
+
+            
+            
+
+
+            return bytes.ToArray();
         }
 }
 

@@ -19,8 +19,11 @@ namespace pong2.Network
         public IPAddress mcastAddress;
         public Socket mcastSocket;
 
+        public GameManager manager;
+
         public MulticastNetwork(GameManager gt) : base(gt)
         {
+            this.manager = gt;
         }
 
         public MulticastNetwork(int port, string ipAddress, GameManager gt) : base(port, ipAddress, gt) { }
@@ -50,13 +53,14 @@ namespace pong2.Network
 
             while (true)
             {
+
                 mcastSocket.ReceiveFrom(buffer, ref remoteEP);
 
                 P packet = new P(buffer[0], buffer[1], buffer[2], buffer[3], buffer[4]);
 
                 Console.WriteLine("RECEIVED PACKET: " + packet.ToString());
 
-                // gameEngine.notify()
+               // manager.notify(packet);
             }
 
         }

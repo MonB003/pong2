@@ -12,7 +12,7 @@ public class Ball : MonoBehaviour
     public Rigidbody2D body;
     public float speed = 200.0f;
     private Packet packet;
-    public int id = 1;
+    public int id = -1;
     private UnityEngine.Vector3 position;
     void Start()
     {   
@@ -29,6 +29,7 @@ public class Ball : MonoBehaviour
     void Update()
     {
         position = this.transform.position; // gets the current vector of the ball
+        
         packet  = Packetize();
        // Vector2 force = new Vector2()
        // body.AddForce(force);
@@ -36,7 +37,7 @@ public class Ball : MonoBehaviour
 
      public Packet Packetize()
     {
-        Packet packet = new Packet((byte)id, (byte)0, (byte)position.x, (byte)position.y, (byte)position.z);
+        Packet packet = new Packet(id, 0, position.x, position.y, position.z);
         return packet;
     }
 

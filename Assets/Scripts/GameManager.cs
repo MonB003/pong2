@@ -104,19 +104,7 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame, 60 frames/second
     void Update()
     {
-        //network.send(PlayerPaddle.Packetize());
-        //network.send(PlayerPaddle2.Packetize());
-
-        // renderArea();
-
-        //    for(int i = 0; i < paddles.Count; i++)
-        //    {
-        //         Paddle p = paddles[i];
-        //         Packet pack = p.GetPacket();
-        //         // send to network here// network.send(pack)
-
-        //    }
-
+    
         Debug.Log("***BALL SENT: " + ball.Packetize().ToString());
         network.send(ball.Packetize());
 
@@ -128,10 +116,17 @@ public class GameManager : MonoBehaviour
             Debug.Log("***PADDLE SENT: " + pack.ToString());
             network.send(p.Packetize());
             // send to network here// network.send(pack)
-
         }
 
+        // recieve
+
     }
+
+
+    // public void notify(Packet p)
+    // {
+    //      Debug.Log("notify being called");
+    // }
 
     private void ResetRound(){
         this.PlayerPaddle.ResetPosition();
