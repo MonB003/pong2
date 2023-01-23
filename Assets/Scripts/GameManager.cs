@@ -23,6 +23,10 @@ public class GameManager : MonoBehaviour
     public List<Paddle> paddles = new List<Paddle>();
     public float[,] positions = new float[2, 3] { { -8.830017f, 0.04998779f, 0.0f }, { 9.02f, -0.08f, 0.0f } };
 
+    [Header("Game Join")]
+    public GameObject Canvas;
+    
+
 
     // public NetworkClient network;
     public Net network;
@@ -59,6 +63,7 @@ public class GameManager : MonoBehaviour
         if (paddles.Count == 0)
         {
             // create game and instantiate the player
+            //gameOverPanel.SetActive(true);
 
         }
         else
@@ -67,9 +72,9 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    void Start()
+    public void Start()
     {
-
+        Debug.Log("START");
 
         //what kind of network
         // network = new WebSocketNetwork();
@@ -88,8 +93,32 @@ public class GameManager : MonoBehaviour
 
         network.send(PlayerPaddle.Packetize());
         network.send(PlayerPaddle2.Packetize());
-    
+
     }
+
+    public void CreatePlayers()
+    {
+        Debug.Log("START");
+
+        //what kind of network
+        // network = new WebSocketNetwork();
+        network = new MultiNet(this);
+        network.execute();
+
+        PlayerPaddle = Instantiate(PlayerPaddle) as Paddle;
+        ball = Instantiate(ball) as Ball;
+        PlayerPaddle2 = Instantiate(PlayerPaddle2) as Paddle;
+
+        paddles.Add(PlayerPaddle);
+        paddles.Add(PlayerPaddle2);
+
+        SetPlayerPosition(PlayerPaddle, positions[0, 0], positions[0, 1], positions[0, 2]);
+        SetPlayerPosition(PlayerPaddle2, positions[1, 0], positions[1, 1], positions[1, 2]);
+
+        network.send(PlayerPaddle.Packetize());
+        network.send(PlayerPaddle2.Packetize());
+    }
+
 
     private void RenderArea(Packet p)
     {
@@ -140,5 +169,35 @@ public class GameManager : MonoBehaviour
         this.PlayerPaddle.ResetPosition();
         this.PlayerPaddle2.ResetPosition();
         ball.Reset();
+    }
+
+
+
+
+
+    // When join button is clicked
+    public void StartGame()
+    {
+        Debug.Log("START GAME");
+
+        Destroy(GameObject.FindGameObjectWithTag("JoinPanel"));
+       
+
+        //Canvas = new GameObject();
+        //Canvas.SetActive(false);
+
+        ////Start();
+
+        //Destroy(Canvas);
+
+        //if (paddles.Count == 0)
+        //{
+        //    // create game and instantiate the player
+
+        //}
+        //else
+        //{
+        //    // join instantiated another player
+        //}
     }
 }
