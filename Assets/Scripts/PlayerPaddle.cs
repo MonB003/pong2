@@ -5,8 +5,7 @@ using UnityEngine;
 
 public class PlayerPaddle : Paddle
 {
-    private Vector2 _direction;
-   
+
 
     // Start is called before the first frame update
     void Start()
@@ -16,23 +15,22 @@ public class PlayerPaddle : Paddle
         z = 0;
 
         p = Packetize();
-        
-    }
 
+    }
 
     // Update is called once per frame
     void Update()
-    {   
+    {
 
-        if(Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow))
+        if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow))
         {
             _direction = Vector2.up;
-        } 
-        else if(Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow))
+        }
+        else if (Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow))
         {
             _direction = Vector2.down;
-        } 
-        else 
+        }
+        else
         {
             _direction = Vector2.zero;
         }
@@ -43,21 +41,20 @@ public class PlayerPaddle : Paddle
         z = 0;
 
         p = Packetize();
-       // Debug.Log("PlayerPaddle: " + p.ToString());
-        //network.send(Packetize());
     }
 
 
 
     public void FixedUpdate()
     {
-        if(_direction.sqrMagnitude != 0)
+        if (_direction.sqrMagnitude != 0)
         {
             body.AddForce(_direction * speed);
         }
     }
 
-      public override string ToString(){
+    public override string ToString()
+    {
         return "Paddle: " + id + " " + x + " " + y + " " + z;
     }
 

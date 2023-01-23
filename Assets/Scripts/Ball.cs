@@ -37,7 +37,7 @@ public class Ball : MonoBehaviour
 
      public Packet Packetize()
     {
-        Packet packet = new Packet(id, 0, position.x, position.y, position.z);
+        Packet packet = new Packet(id, (float)Actions.MOVE,(float)1, 0,0, position.x, position.y, 0);
         return packet;
     }
 

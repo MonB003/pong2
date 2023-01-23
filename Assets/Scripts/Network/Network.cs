@@ -15,13 +15,13 @@ namespace pong2.Network
     public abstract class Network
     {
         private const int PORT = 11000;
-        private const string IP_ADDRESS = "230.0.0.2";
-        private const int BUFFER_SIZE = 20;
+        private const string IP_ADDRESS = "224.168.100.2";
+        protected const int BUFFER_SIZE = 8;
 
         private int port;
         private string ipAddress;
         private GameManager gt;
-        protected byte[] buffer;
+        protected float[] buffer;
 
         private Thread t;
 
@@ -29,7 +29,7 @@ namespace pong2.Network
         {
             this.port = PORT;
             this.ipAddress = IP_ADDRESS;
-            this.buffer = new byte[BUFFER_SIZE];
+            this.buffer = new float[BUFFER_SIZE];
             this.gt = gt;
             setup();
         }
@@ -39,7 +39,7 @@ namespace pong2.Network
             this.port = port;
             this.ipAddress = ipAddress;
             this.gt = gt;
-            this.buffer = new byte[BUFFER_SIZE];
+            this.buffer = new float[BUFFER_SIZE];
             setup();
         }
 
@@ -48,7 +48,7 @@ namespace pong2.Network
             this.port = port;
             this.ipAddress = ipAddress;
             this.gt = gt;
-            this.buffer = new byte[bufferSize];
+            this.buffer = new float[bufferSize];
             setup();
         }
 
@@ -60,6 +60,11 @@ namespace pong2.Network
         public string GetIPAddress()
         {
             return ipAddress;
+        }
+
+          public float[] GetBuffer()
+        {
+            return buffer;
         }
 
 

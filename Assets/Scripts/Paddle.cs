@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using pong2;
 
-public class Paddle : MonoBehaviour
+public abstract class Paddle : MonoBehaviour
 {
     //  private NetworkAPI network;
     //public NetworkClient network = new NetworkClient();
@@ -14,17 +14,30 @@ public class Paddle : MonoBehaviour
     public float y;
     public float x;
     public float z;
+    private float state;
+    private float action;
+    private float host;
+    private float coordinateID;
     protected Rigidbody2D body;
+    public Vector2 _direction;
+
     public Packet p;
     //public NetworkClient network;
 
 
     private void Awake()
     {
-        id = 1;
+        Debug.Log("AWAKE PADDLE");
         body = GetComponent<Rigidbody2D>();
     }
+    
+    public int GetID() {
+        return id;
+    }
 
+     public void SetID(int id){
+         this.id = id;
+     }
     public void SetPosition(float x, float y, float z)
     {
         this.transform.position = new Vector3(x, y, z);
@@ -35,12 +48,7 @@ public class Paddle : MonoBehaviour
 
     public Packet Packetize()
     {
-     //   Debug.Log("packet 1: " + id);
-     //    Debug.Log("packet 2: " + 0);
-      //    Debug.Log("packet 3: " + x);
-      //     Debug.Log("packet 4: " + y);
-           // Debug.Log("packet 5: " + z);
-        Packet packet = new Packet(id, 0, x, y, z);
+        Packet packet = new Packet(id, action,state, host,coordinateID, x, y, z);
         return packet;
     }
 
@@ -81,10 +89,27 @@ public class Paddle : MonoBehaviour
         x = this.transform.position.x;
         z = this.transform.position.z;
 
-        //p = Packetize();
 
+   if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow))
+        {
+            Debug.Log("UP");
+            _direction = Vector2.up;
+        }
+        else if (Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow))
+        {
+            Debug.Log("DOWN");
+            _direction = Vector2.down;
+        }
+        else
+        {
+            _direction = Vector2.zero;
+        }
 
-        // network.Send(Packetize());
+        // update locations
+        y = _direction.y;
+        x = _direction.x;
+        z = 0;
+        
 
     }
 
@@ -97,17 +122,9 @@ public class Paddle : MonoBehaviour
 
         // update locations
         y = this.transform.position.y;
-        //UnityEngine.Debug.Log("y " + y);
         x = this.transform.position.x;
-        //UnityEngine.Debug.Log("x " + x);
-
         z = this.transform.position.z;
-        //UnityEngine.Debug.Log("z " + z);
-
         p = Packetize();
-
-        // p = Packetize();
-
     }
 
     public void ResetPosition()
@@ -119,4 +136,22 @@ public class Paddle : MonoBehaviour
     public override string ToString(){
         return "Paddle: " + id + " " + x + " " + y + " " + z;
     }
+
+
+
+    public void SetPaddle(Packet packet) {
+        this.id           = (int)packet.GetID();
+        this.action       = (int)packet.GetAction();
+        this.state        = (int) packet.GetState();
+        this.host         = (int) packet.GetHost();
+        this.coordinateID = (int)packet.GetCoordinateID();
+        // this.x            = packet.x;
+        // this.y            = packet.y;
+        // this.z            = packet.z;
+        //p                 = packet;
+    }
+
+    
+
+
 }

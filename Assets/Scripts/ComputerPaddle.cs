@@ -9,6 +9,13 @@ public class ComputerPaddle : Paddle
     public void SetBall(Rigidbody2D ball){
         this.ball = ball;
     }
+    
+    
+    // public override void SetID(int id){
+    //      this.id = id;
+    // }
+
+
     private void FixedUpdate()
     {
         if(this.ball.velocity.x > 0.0f)
