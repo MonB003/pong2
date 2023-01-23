@@ -6,10 +6,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using MultiNet = pong2.Network.MulticastNetwork;
+using mListener = pong2.MulticastListener.MulticastListener;
 using WebSock = pong2.Network.WebSocketNetwork;
 using Net = pong2.Network.Network;
 using pong2;
-using NetworkAPI;
 
 public class GameManager : MonoBehaviour
 {
@@ -34,7 +34,9 @@ public class GameManager : MonoBehaviour
     bool isHost;
     private Packet acknowledgePacket;
 
-    NetworkComm networkComm;
+
+    private mListener listener;
+
 
     public void SetPlayerPosition(Paddle paddle, float x, float y, float z)
     {
@@ -62,14 +64,8 @@ public class GameManager : MonoBehaviour
         //network = new MultiNet(this);
         //network.execute();
 
-        networkComm = new NetworkComm();
-        networkComm.MsgReceived += new NetworkComm.MsgHandler(processMsg);
-        (new Thread(new ThreadStart(networkComm.ReceiveMessages))).Start();
-    }
-
-    private void processMsg(string message)
-    {
-        Debug.Log("FROM DELEGATE: " + message);
+        listener = new mListener();
+        //listener.Start();
     }
 
     void Start()
@@ -77,18 +73,18 @@ public class GameManager : MonoBehaviour
 
         // make a list of incoming packets
 
-        //Packet player = ReceiveAcknowledgement(acknowledgePacket);
+        Packet player = ReceiveAcknowledgement(acknowledgePacket);
 
 
-        //if (player.GetHost() == 1)
-        //{
-        //    Debug.Log("Im the host");
-        //  //  ball.Init();
-        //} 
-        //else 
-        //{
-        //   // RenderBall(ball);
-        //}
+        if (player.GetHost() == 1)
+        {
+            Debug.Log("Im the host");
+          //  ball.Init();
+        } 
+        else 
+        {
+           // RenderBall(ball);
+        }
         //ball = Instantiate(ball) as Ball;
 
         // send a packet, for entering the game
@@ -134,7 +130,6 @@ public class GameManager : MonoBehaviour
         }
 
         Packet playerPacket = new Packet((float)id, (float)usersAction, (float)usersState, host, coordinateID, 0, 0, 0);
-        networkComm.sendMessage("Another object entered trigger: " + playerPacket.ToString());
         return playerPacket;
 
     }
@@ -177,8 +172,7 @@ public class GameManager : MonoBehaviour
             paddles.Add(Host);
             Host.SetPaddle(packet);
             SetPlayerPosition(Host, positions[0, 0], positions[0, 1], positions[0, 2]);
-            //network.send(Host.Packetize());
-            networkComm.sendMessage("" + Host.Packetize());
+            network.send(Host.Packetize());
             return Host;
         }
         else
@@ -187,8 +181,7 @@ public class GameManager : MonoBehaviour
             p.SetID(Host.GenerateIDForPaddle());
             paddles.Add(p);
             SetPlayerPosition(p, positions[0, 0], positions[0, 1], positions[0, 2]);
-            //network.send(p.Packetize());
-            networkComm.sendMessage("" + p.Packetize());
+            network.send(p.Packetize());
             return p;
         }
     }
@@ -196,22 +189,21 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame, 60 frames/second
     void Update()
     {
+        //listener.Update();
 
-        Debug.Log("***BALL SENT: " + ball.Packetize().ToString());
-        //network.send(ball.Packetize());
-        networkComm.sendMessage("" + ball.Packetize());
+        //Debug.Log("***BALL SENT: " + ball.Packetize().ToString());
+        ////network.send(ball.Packetize());
 
-        for (int i = 0; i < paddles.Count; i++)
-        {
+        //for (int i = 0; i < paddles.Count; i++)
+        //{
 
-            Paddle p = paddles[i];
-            p.UpdatePos();
-            Packet pack = p.GetPacket();
-            Debug.Log("***PADDLE SENT: " + pack.ToString());
-            //network.send(p.Packetize());
-            networkComm.sendMessage("" + p.Packetize());
-            // send to network here// network.send(pack)
-        }
+        //    Paddle p = paddles[i];
+        //    p.UpdatePos();
+        //    Packet pack = p.GetPacket();
+        //    Debug.Log("***PADDLE SENT: " + pack.ToString());
+        //    //network.send(p.Packetize());
+        //    // send to network here// network.send(pack)
+        //}
 
     }
 
@@ -254,7 +246,7 @@ public class GameManager : MonoBehaviour
                 //  InstantiatePlayer(true); // start a game with the host.
                 break;
             case (int)Actions.SERVER:
-                //ReceiveAcknowledgement(p);
+                ReceiveAcknowledgement(p);
                 break;
             default:
                 // do nothing
