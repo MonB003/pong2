@@ -44,10 +44,11 @@ namespace pong2
             this.data = data;
         }
 
-        
-    public float GetID() {
-        return data[0];
-    }
+
+        public float GetID()
+        {
+            return data[0];
+        }
 
         public float GetCoordinateID()
         {
@@ -69,7 +70,7 @@ namespace pong2
             return data[2];
         }
 
-     
+
         public void SetLocation(float location)
         {
             data[1] = location;
@@ -87,7 +88,21 @@ namespace pong2
         {
             return data[3];
         }
-        
+
+        public float GetX()
+        {
+            return data[5];
+        }
+
+        public float GetY()
+        {
+            return data[6];
+        }
+
+        public float GetZ()
+        {
+            return data[7];
+        }
         public override string ToString()
         {
             string result = "";
@@ -107,7 +122,7 @@ namespace pong2
             foreach (float f in data)
             {
                 byte[] floatBytes = BitConverter.GetBytes(f);
-                
+
                 bytes.AddRange(BitConverter.GetBytes(f));
             }
             return bytes.ToArray();
@@ -120,9 +135,10 @@ namespace pong2
         }
     }
 
-    enum Actions {
-        JOIN, 
-        START, 
+    enum Actions
+    {
+        JOIN,
+        START,
         MOVE,
         LEAVE,
         SERVER,

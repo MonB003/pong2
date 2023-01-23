@@ -58,26 +58,6 @@ public class GameManager : MonoBehaviour
     {
         network = new MultiNet(this);
         network.execute();
-
-        // Thread.Sleep(timeout); // sleep to see if anything exists
-
-        // Debug.Log("GET BUFFER: " + network.GetBuffer());
-
-        // System.Random r = new System.Random();
-        // int id = r.Next(int.MinValue, int.MaxValue);
-
-        // int[] introNumbers = new int[3];
-        // introNumbers[0] = r.Next(int.MinValue, int.MaxValue);
-        // introNumbers[1] = r.Next(int.MinValue, int.MaxValue);
-        // introNumbers[2] = r.Next(int.MinValue, int.MaxValue);
-
-
-        // Packet p = new Packet((float)id, (float)Actions.JOIN, introNumbers[0], introNumbers[1], introNumbers[2]);
-
-        // network.send(p);
-
-        // TimeSpan timeout = TimeSpan.FromSeconds(2);
-        // Thread.Sleep(timeout);
     }
 
     void Start()
@@ -85,24 +65,37 @@ public class GameManager : MonoBehaviour
 
         // make a list of incoming packets
 
-
-        ReceiveAcknowledgement(acknowledgePacket);
-
+        Packet player = ReceiveAcknowledgement(acknowledgePacket);
 
 
-        
-
-        // we might run into errors 
-        // if (isHost)
-        // {
-        //     InstantiatePlayer(true);
-        // }
-        // else
-        // {
-        //     InstantiatePlayer(false);
-        // }
-
+        if (player.GetHost() == 1)
+        {
+          //  ball.Init();
+        } 
+        else 
+        {
+           // RenderBall(ball);
+        }
         //ball = Instantiate(ball) as Ball;
+
+        // send a packet, for entering the game
+
+
+
+    }
+
+    public void Render()
+    {
+
+    }
+
+    /**
+          * Renders the ball to the screen
+    */
+    public void RenderBall(Packet p)
+    {
+        ball.transform.position = new Vector3(p.GetX(), p.GetY(), p.GetZ());
+        // b.transform.position = new Vector3(b.x, b.y, b.z);
     }
 
 
@@ -132,10 +125,9 @@ public class GameManager : MonoBehaviour
 
     }
 
-    public void ReceiveAcknowledgement(Packet p)
+    public Packet ReceiveAcknowledgement(Packet p)
     {
         Debug.Log("RECEIVED ACKNOWLEDGEMENT: " + p.ToString());
-
 
         Packet playerInformation = CreatePlayerPacket(p);
 
@@ -152,6 +144,8 @@ public class GameManager : MonoBehaviour
                 InstantiatePlayer(true, playerInformation);
                 break;
         }
+
+        return playerInformation;
     }
 
     /*
@@ -160,16 +154,15 @@ public class GameManager : MonoBehaviour
     public Paddle InstantiatePlayer(bool host, Packet packet)
     {
         Paddle p = null;
-        
+
         if (host)
         {
             Host = Instantiate(Host) as HostPaddle;
             Debug.Log("here");
-           // Host.SetID(Host.GenerateIDForPaddle());
+            // Host.SetID(Host.GenerateIDForPaddle());
             paddles.Add(Host);
             Host.SetPaddle(packet);
             SetPlayerPosition(Host, positions[0, 0], positions[0, 1], positions[0, 2]);
-           
             network.send(Host.Packetize());
             return Host;
         }
@@ -193,6 +186,7 @@ public class GameManager : MonoBehaviour
 
         for (int i = 0; i < paddles.Count; i++)
         {
+
             Paddle p = paddles[i];
             p.UpdatePos();
             Packet pack = p.GetPacket();
@@ -204,12 +198,24 @@ public class GameManager : MonoBehaviour
     }
 
 
+    private void Movement(Packet p)
+    {
+        int id = (int)p.GetID();
+        switch (id)
+        {
+            case -1: // this is the balls ID number in the packet
+                RenderBall(p);
+                break;
+            default:
+                // move player function as all other IDs will b players
+                break;
+        }
+    }
     public void notify(Packet p)
     {
         Debug.Log("---------NOTIFIED: " + p.ToString());
 
         int action = (int)p.ConvertByteToFloat(1);
-
 
 
         // check the packet
@@ -220,6 +226,7 @@ public class GameManager : MonoBehaviour
 
                 break;
             case (int)Actions.MOVE:
+                Movement(p); // controls who is moving etc.
 
                 break;
             case (int)Actions.START:

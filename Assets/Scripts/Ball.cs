@@ -58,6 +58,15 @@ public class Ball : MonoBehaviour
         body.AddForce(force);
     }
 
+    // public void Init()
+    // {
+        
+    //     this.transform.position = UnityEngine.Vector2.zero;
+    //     this.speed = 200.0f;
+    //     AddStartingForce();
+        
+    // }
+
     public void Reset()
     {
         body.velocity = UnityEngine.Vector2.zero;

@@ -1,4 +1,4 @@
-﻿//using System.Diagnostics;
+﻿
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,9 +17,11 @@ namespace pong2.Network
     public class MulticastNetwork : Network
     {
 
+        public bool playerEntered = false;
         public IPEndPoint endPoint;
         public IPAddress mcastAddress;
         public Socket mcastSocket;
+        int playerCount = 0;
 
         public Packet InstructionPacket;
 
@@ -45,11 +47,45 @@ namespace pong2.Network
             Debug.Log("remoteEP: " + remoteEP.ToString());
             Console.WriteLine("SENDING: " + packet.ToString());
 
+            if (!playerEntered)
+            {
+                List<Packet> packets = GetGameInfo();
+
+                
+                Dictionary<int,Packet> singlePackets = new Dictionary<int, P>();
+                int idCount = 0;
+                List<int> keys = new List<int>(singlePackets.Keys);
+                Debug.Log(keys);
+
+                foreach (Packet p in packets)
+                {
+                    int id = (int)p.GetID();
+                    Debug.Log("Packet incoming: " + p.ToString() + " ID: " + id);
+                    
+                    if(!keys.Contains(id) || id != -1){
+                        Debug.Log("ADDING PACKET: " + p.ToString() +" KEY: " + id);
+                         singlePackets.Add(id,p);
+                    }
+                    else 
+                    {
+                        playerCount++;
+                    }
+
+                    // this.mcastSocket.SendTo(p.GetBuffer(), remoteEP);
+                    
+                }
+
+                playerEntered = true;
+                Debug.Log("PLAYER COUNT == " + playerCount);
+            }
+
             try
             {
+                //Debug.Log("SENDING: " + p.ToString());
+
                 //Send multicast packets to the listener.
-                //this.mcastSocket.SendTo(packet.GetBuffer(), endPoint); //old code
-                this.mcastSocket.SendTo(packet.GetBuffer(), remoteEP); // new code
+                this.mcastSocket.SendTo(packet.GetBuffer(), endPoint); //old code
+                //this.mcastSocket.SendTo(packet.GetBuffer(), remoteEP); // new code
             }
             catch (Exception e)
             {
@@ -67,6 +103,8 @@ namespace pong2.Network
             {
                 if (!ack)
                 {
+                    Debug.Log("in acknowledgement receive");
+
                     Acknowledgment(); // send joining packet.
                     ack = true;
                 }
@@ -77,6 +115,7 @@ namespace pong2.Network
                     endPoint.ToString(),
                       Encoding.ASCII.GetString(results, 0, results.Length));
 
+                    Debug.Log("in second receive");
                     results = new byte[BUFFER_SIZE * sizeof(float)];
 
                     Console.WriteLine("BUFFER SIZE " + results.Length);
@@ -84,15 +123,15 @@ namespace pong2.Network
                     int recv = mcastSocket.ReceiveFrom(results, ref remoteEP);
 
                     // Checking received content
-                     stringData = Encoding.ASCII.GetString(results, 0, recv);
+                    stringData = Encoding.ASCII.GetString(results, 0, recv);
                     Console.WriteLine(stringData);
 
                     Buffer.BlockCopy(results, 0, this.buffer, 0, BUFFER_SIZE * sizeof(float));
 
 
-                    // P packet = new P(buffer[0], buffer[1], buffer[2], buffer[3], buffer[4]);
+                    P packet = new P(buffer[0], buffer[1], buffer[2], buffer[3], buffer[4], buffer[5], buffer[6], buffer[7]);
                     // Console.WriteLine("RECEIVED PACKET: " + packet.ToString());
-                    //  manager.notify(packet);
+                    manager.notify(packet);
                 }
             }
 
@@ -123,8 +162,9 @@ namespace pong2.Network
 
             var startTime = DateTime.Now.AddSeconds(3);
             byte[] results = new byte[BUFFER_SIZE * sizeof(float)];
-
-
+            Debug.Log("Start time: "+ startTime);
+            
+            Debug.Log("Date time: " + DateTime.UtcNow);
             while (DateTime.UtcNow < startTime)
             {
 
@@ -134,8 +174,12 @@ namespace pong2.Network
                 Buffer.BlockCopy(results, 0, this.buffer, 0, BUFFER_SIZE * sizeof(float));
 
                 P packet = new P(buffer[0], buffer[1], buffer[2], buffer[3], buffer[4], buffer[5], buffer[6], buffer[7]);
+                Debug.Log("RECEIVED PACKET: " + packet.ToString());
                 packets.Add(packet);
             }
+
+            Debug.Log("PACKETS: " + packets.ToString());
+            Debug.Log("Packets size: " + packets.Count);
 
             return packets;
         }
@@ -161,10 +205,10 @@ namespace pong2.Network
         {
 
             List<Packet> packets = GetGameInfo();
-            bool gameActive = InterpretPackets(packets);
-            int state = 0;
+            bool gameActive      = InterpretPackets(packets);
+            int state            = 0;
             int action = (int)Actions.START;
-            
+
             if (gameActive)
             {
                 state = 1;
@@ -188,6 +232,7 @@ namespace pong2.Network
             Console.Write("Joining Multicast: ");
             IPAddress localIP = IPAddress.Any;
             EndPoint localEP = (EndPoint)new IPEndPoint(localIP, this.GetPort()); // RECIEVE ENDPOINT
+            
             mcastSocket.Bind(localEP);
 
             // RECIEVE STUFF
