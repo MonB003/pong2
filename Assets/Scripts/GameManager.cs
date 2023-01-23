@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using System.Threading;
 using System.Security.Cryptography;
 using System;
@@ -70,6 +71,7 @@ public class GameManager : MonoBehaviour
 
         if (player.GetHost() == 1)
         {
+            Debug.Log("Im the host");
           //  ball.Init();
         } 
         else 
