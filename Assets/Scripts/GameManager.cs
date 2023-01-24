@@ -65,11 +65,15 @@ public class GameManager : MonoBehaviour
         networkComm = new NetworkComm();
         networkComm.MsgReceived += new NetworkComm.MsgHandler(processMsg);
         (new Thread(new ThreadStart(networkComm.ReceiveMessages))).Start();
+
+
+        NetworkComm.JoinMulticastGroup();
+        NetworkComm.BroadcastMessage("Hello");
     }
 
     private void processMsg(string message)
     {
-        Debug.Log("FROM DELEGATE: " + message);
+        Debug.Log("76 FROM DELEGATE: " + message);
     }
 
     void Start()
@@ -141,11 +145,11 @@ public class GameManager : MonoBehaviour
 
     public Packet ReceiveAcknowledgement(Packet p)
     {
-        Debug.Log("RECEIVED ACKNOWLEDGEMENT: " + p.ToString());
+        Debug.Log("148 RECEIVED ACKNOWLEDGEMENT: " + p.ToString());
 
         Packet playerInformation = CreatePlayerPacket(p);
 
-        Debug.Log("SENDING PLAYER INFORMATION: " + playerInformation.ToString());
+        Debug.Log("152 SENDING PLAYER INFORMATION: " + playerInformation.ToString());
 
 
         switch ((int)playerInformation.GetHost())
@@ -199,7 +203,7 @@ public class GameManager : MonoBehaviour
 
         Debug.Log("***BALL SENT: " + ball.Packetize().ToString());
         //network.send(ball.Packetize());
-        networkComm.sendMessage("" + ball.Packetize());
+        networkComm.sendMessage("206: " + ball.Packetize());
 
         for (int i = 0; i < paddles.Count; i++)
         {
@@ -209,7 +213,7 @@ public class GameManager : MonoBehaviour
             Packet pack = p.GetPacket();
             Debug.Log("***PADDLE SENT: " + pack.ToString());
             //network.send(p.Packetize());
-            networkComm.sendMessage("" + p.Packetize());
+            networkComm.sendMessage("216: " + p.Packetize());
             // send to network here// network.send(pack)
         }
 
