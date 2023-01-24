@@ -37,7 +37,7 @@ namespace pong2.MulticastListener
 
         private static void MulticastOptionProperties()
         {
-            Debug.Log("Current multicast group is: " + mcastOption.Group);
+          //  Debug.Log("Current multicast group is: " + mcastOption.Group);
             Debug.Log("Current multicast local address is: " + mcastOption.LocalAddress);
         }
 

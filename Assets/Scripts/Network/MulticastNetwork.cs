@@ -29,6 +29,9 @@ namespace pong2.Network
 
         public Boolean ack = false;
 
+        private EventHandler handler; 
+
+
         public MulticastNetwork(GameManager gt) : base(gt)
         {
             this.manager = gt;
