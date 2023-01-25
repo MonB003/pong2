@@ -5,39 +5,32 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using MultiNet = pong2.Network.MulticastNetwork;
+using MultiNet  = pong2.Network.MulticastNetwork;
 using mListener = pong2.MulticastListener.MulticastListener;
-using WebSock = pong2.Network.WebSocketNetwork;
-using Net = pong2.Network.Network;
+using WebSock   = pong2.Network.WebSocketNetwork;
+using Net       = pong2.MulticastListener.MulticastListener;//pong2.Network.Network;
+using EvHandler = A2.Events.EventHandler;
 using pong2;
+
 
 public class GameManager : MonoBehaviour
 {
-    private int GAME_ACTIVE = 1;
-    private int _HOST_ID = 0;
+    private int GAME_ACTIVE   = 1;
+    private int _HOST_ID      = 0;
     private int playerScore   = 0;
     private int computerScore = 0;
     public int ballSpeed      = 200;
     public Ball ball; 
-
     public HostPaddle Host;
-
     public Text playerScoreText;
     public Text computerScoreText;
-    public int playerCount = 0;
+    public int playerCount      = 0;
     public List<Paddle> paddles = new List<Paddle>();
-    public float[,] positions = new float[2, 3] { { -8.830017f, 0.04998779f, 0.0f }, { 9.02f, -0.08f, 0.0f } };
-
-    public Net network;
-
-    public bool startGame = false;
+    public float[,] positions   = new float[2, 3] { { -8.830017f, 0.04998779f, 0.0f }, { 9.02f, -0.08f, 0.0f } };
     bool isHost;
     private Packet acknowledgePacket;
 
-
-    private mListener listener;
-
-    private EventHandler handler;
+    public EvHandler handler;
 
 
     // public void SetPlayerPosition(Paddle paddle, float x, float y, float z)
@@ -66,9 +59,11 @@ public class GameManager : MonoBehaviour
         //network = new MultiNet(this);
         //network.execute();
 
-        listener = new mListener();
-        listener.Start();
+      //  handler = GameObject.Find("EventHandler").GetComponent<EvHandler>();
+        //handler.SendToNetwork("let me in!");
+              
     }
+    
 
     // void Start()
     // {

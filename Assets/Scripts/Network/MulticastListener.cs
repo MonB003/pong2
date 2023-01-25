@@ -23,13 +23,14 @@ namespace pong2.MulticastListener
             StartMulticast();
             // Display MulticastOption properties.
             MulticastOptionProperties();
+                        ReceiveBroadcastMessages();
+
         }
 
         // Update is called once per frame
         public void Update()
         {
             // Receive broadcast messages.
-            ReceiveBroadcastMessages();
         }
 
 
@@ -37,8 +38,8 @@ namespace pong2.MulticastListener
 
         private static void MulticastOptionProperties()
         {
-          //  Debug.Log("Current multicast group is: " + mcastOption.Group);
-            Debug.Log("Current multicast local address is: " + mcastOption.LocalAddress);
+            // Debug.Log("Current multicast group is: " + mcastOption.Group);
+            // Debug.Log("Current multicast local address is: " + mcastOption.LocalAddress);
         }
 
 
@@ -47,6 +48,7 @@ namespace pong2.MulticastListener
 
             try
             {
+                Debug.Log("Commencing multicast...");
                 mcastSocket = new Socket(AddressFamily.InterNetwork,
                                          SocketType.Dgram,
                                          ProtocolType.Udp);
@@ -91,7 +93,7 @@ namespace pong2.MulticastListener
                 while (!done)
                 {
                     Debug.Log("Waiting for multicast packets.......");
-                    Debug.Log("Enter ^C to terminate.");
+                   // Debug.Log("Enter ^C to terminate.");
 
                     mcastSocket.ReceiveFrom(data, ref remoteEP);
 
@@ -109,7 +111,7 @@ namespace pong2.MulticastListener
                         data = new byte[1024];
                         int recv = mcastSocket.ReceiveFrom(data, ref remoteEP);
                         stringData = Encoding.ASCII.GetString(data, 0, recv);
-                        Debug.Log(stringData);
+                        Debug.Log("this is the message: " + stringData);
                     }
 
                 }

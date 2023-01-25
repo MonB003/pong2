@@ -7,18 +7,21 @@ using System.Collections.Generic;
 using UnityEngine;
 namespace NetworkAPI
 {
-    public class NetworkComm
+    public class NetworkComm: MonoBehaviour
     {
         public delegate void MsgHandler(string message);
         public event MsgHandler MsgReceived;
+        private EventHandler handler;
+
         public void sendMessage(String message)
         {
             IPAddress mcastAddress;
             int mcastPort;
-            Socket mcastSocket = null;
-            mcastAddress = IPAddress.Parse("224.168.100.2");
-            mcastPort = 11000;
             IPEndPoint endPoint;
+
+            Socket mcastSocket = null;
+            mcastAddress       = IPAddress.Parse("224.168.100.2");
+            mcastPort          = 11000;
 
             try
             {
