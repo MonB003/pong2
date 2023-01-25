@@ -16,8 +16,8 @@ namespace NetworkAPI
             IPAddress mcastAddress;
             int mcastPort;
             Socket mcastSocket = null;
-            mcastAddress = IPAddress.Parse("224.168.100.2");
-            mcastPort = 11000;
+            mcastAddress       = IPAddress.Parse("224.168.100.2");
+            mcastPort          = 11000;
             IPEndPoint endPoint;
 
             try
